@@ -32,6 +32,39 @@ enum SampleData {
         library.addItem(ItemDraft(title: "Hiking boots", price: 249, currencyCode: "AUD"), to: birthday)
     }
 
+    /// A pretend friend so the Friends tab can be previewed without a second iCloud account.
+    static func seedFriendIfNone(_ context: ModelContext) {
+        guard ((try? context.fetchCount(FetchDescriptor<Friend>())) ?? 0) == 0 else { return }
+        let owner = "_sample_friend"
+        let friend = Friend(ownerName: owner, displayName: "Sam Lee")
+        context.insert(friend)
+
+        let lists = [("Birthday", 0.0), ("Christmas", 1.0)].map { name, offset in
+            let list = FriendWishlist(ownerName: owner, recordName: name, name: name,
+                                      createdAt: .now.addingTimeInterval(offset))
+            context.insert(list)
+            list.friend = friend
+            return list
+        }
+        let gifts: [(String, Decimal?, Color, Int)] = [
+            ("Polaroid Go Generation 2", 129.95, .red, 0),
+            ("Aesop Resurrection Hand Balm", 49, .brown, 0),
+            ("Board game night: Wingspan", 89, .blue, 0),
+            ("Merino wool socks", 35, .green, 1),
+        ]
+        for (index, gift) in gifts.enumerated() {
+            let item = FriendItem(ownerName: owner, recordName: "gift-\(index)")
+            context.insert(item)
+            item.title = gift.0
+            item.price = gift.1
+            item.imageData = swatch(gift.2)
+            item.createdAt = .now.addingTimeInterval(Double(-index) * 60)
+            item.friend = friend
+            item.wishlist = lists[gift.3]
+        }
+        try? context.save()
+    }
+
     @MainActor
     static var previewLibrary: Library {
         let container = GiftedSchema.makeInMemoryContainer()

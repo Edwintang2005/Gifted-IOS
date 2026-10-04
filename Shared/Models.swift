@@ -71,14 +71,11 @@ final class WishItem {
     }
 }
 
-extension WishItem {
-    var formattedPrice: String? {
-        price.map { $0.formatted(.currency(code: currencyCode)) }
-    }
-}
-
 nonisolated enum GiftedSchema {
-    static let models: [any PersistentModel.Type] = [Wishlist.self, WishItem.self]
+    static let models: [any PersistentModel.Type] = [
+        Wishlist.self, WishItem.self,
+        Friend.self, FriendWishlist.self, FriendItem.self,
+    ]
 
     /// The on-disk store in the app group container, readable by the share extension.
     static func makeContainer(readOnly: Bool = false) throws -> ModelContainer {

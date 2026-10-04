@@ -6,8 +6,8 @@
 import SwiftUI
 import UIKit
 
-struct ItemCard: View {
-    let item: WishItem
+struct ItemCard<Gift: GiftPresentable>: View {
+    let item: Gift
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

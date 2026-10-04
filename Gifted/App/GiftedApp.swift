@@ -17,6 +17,7 @@ struct GiftedApp: App {
     private let modelContainer: ModelContainer
     @State private var sync: SyncManager
     @State private var library: Library
+    @State private var friends: FriendsSync
 
     init() {
         let container: ModelContainer
@@ -32,20 +33,27 @@ struct GiftedApp: App {
         }
         let sync = SyncManager(modelContext: container.mainContext)
         let library = Library(context: container.mainContext, sync: sync)
+        let friends = FriendsSync(modelContext: container.mainContext)
 
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-seedSampleData") {
             SampleData.seedIfEmpty(library)
+            SampleData.seedFriendIfNone(container.mainContext)
         }
         #endif
 
         if !AppEnvironment.isRunningTests {
             sync.start()
+            friends.start()
+            ShareInvitations.handler = { metadata in
+                Task { await friends.accept(metadata) }
+            }
         }
 
         self.modelContainer = container
         _sync = State(initialValue: sync)
         _library = State(initialValue: library)
+        _friends = State(initialValue: friends)
     }
 
     var body: some Scene {
@@ -54,12 +62,16 @@ struct GiftedApp: App {
                 .tint(.brandAccent)
                 .environment(sync)
                 .environment(library)
+                .environment(friends)
         }
         .modelContainer(modelContainer)
         .onChange(of: scenePhase, initial: true) { _, phase in
             guard phase == .active, !AppEnvironment.isRunningTests else { return }
             library.importInbox()
-            Task { await sync.syncNow() }
+            Task {
+                await sync.syncNow()
+                await friends.syncNow()
+            }
         }
     }
 }
@@ -77,12 +89,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         return true
     }
-}
 
-struct RootView: View {
-    var body: some View {
-        NavigationStack {
-            WishlistScreen()
-        }
+    /// Routes opened invite links to SceneDelegate.
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let configuration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        configuration.delegateClass = SceneDelegate.self
+        return configuration
     }
 }

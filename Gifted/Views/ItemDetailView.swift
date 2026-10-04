@@ -26,72 +26,27 @@ struct ItemDetailView: View {
     }
 
     private var content: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                ItemImage(data: item.imageData, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
-                    .frame(minHeight: item.imageData == nil ? 220 : nil)
-                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(item.title)
-                        .font(.title2.bold())
-                        .foregroundStyle(Color.brandInk)
-                        .textSelection(.enabled)
-                    if let price = item.formattedPrice {
-                        Text(price)
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(Color.brandAccent)
-                    }
-                    if let listName = item.wishlist?.name {
-                        Label(listName, systemImage: "list.bullet")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                if !item.notes.isEmpty {
-                    Text(item.notes)
-                        .font(.body)
-                        .textSelection(.enabled)
-                }
-
-                if let link = item.link {
-                    Link(destination: link) {
-                        Label("View in Store", systemImage: "safari")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-
-                    Text(link.host() ?? link.absoluteString)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
+        GiftDetailContent(gift: item, listName: item.wishlist?.name)
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle(item.title)
+            .toolbarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button("Edit") { editing = true }
+                    moreMenu
                 }
             }
-            .padding()
-        }
-        .background(Color(.systemGroupedBackground))
-        .navigationTitle(item.title)
-        .toolbarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button("Edit") { editing = true }
-                moreMenu
+            .sheet(isPresented: $editing) {
+                ItemEditorView(mode: .edit(item))
             }
-        }
-        .sheet(isPresented: $editing) {
-            ItemEditorView(mode: .edit(item))
-        }
-        .confirmationDialog("Delete this gift?", isPresented: $confirmingDelete, titleVisibility: .visible) {
-            Button("Delete Gift", role: .destructive) {
-                library.delete(item)
-                dismiss()
+            .confirmationDialog("Delete this gift?", isPresented: $confirmingDelete, titleVisibility: .visible) {
+                Button("Delete Gift", role: .destructive) {
+                    library.delete(item)
+                    dismiss()
+                }
+            } message: {
+                Text("It will be removed from all your devices.")
             }
-        } message: {
-            Text("It will be removed from all your devices.")
-        }
     }
 
     private var moreMenu: some View {
@@ -107,6 +62,61 @@ struct ItemDetailView: View {
                 }
             }
             Button("Delete", systemImage: "trash", role: .destructive) { confirmingDelete = true }
+        }
+    }
+}
+
+/// The body of a gift's detail page, shared by the user's own items and friends' items.
+struct GiftDetailContent<Gift: GiftPresentable>: View {
+    let gift: Gift
+    var listName: String?
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                ItemImage(data: gift.imageData, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: gift.imageData == nil ? 220 : nil)
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(gift.title)
+                        .font(.title2.bold())
+                        .foregroundStyle(Color.brandInk)
+                        .textSelection(.enabled)
+                    if let price = gift.formattedPrice {
+                        Text(price)
+                            .font(.title3.weight(.semibold))
+                            .foregroundStyle(Color.brandAccent)
+                    }
+                    if let listName {
+                        Label(listName, systemImage: "list.bullet")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if !gift.notes.isEmpty {
+                    Text(gift.notes)
+                        .font(.body)
+                        .textSelection(.enabled)
+                }
+
+                if let link = gift.link {
+                    Link(destination: link) {
+                        Label("View in Store", systemImage: "safari")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+
+                    Text(link.host() ?? link.absoluteString)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .padding()
         }
     }
 }

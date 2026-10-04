@@ -112,22 +112,94 @@ extension WishItem {
     }
 
     func apply(_ record: CKRecord) {
-        title = record[CloudSchema.Field.title] as? String ?? title
-        price = (record[CloudSchema.Field.price] as? String).flatMap {
-            Decimal(string: $0, locale: Locale(identifier: "en_US_POSIX"))
-        }
-        currencyCode = record[CloudSchema.Field.currencyCode] as? String ?? currencyCode
-        link = (record[CloudSchema.Field.link] as? String).flatMap(URL.init(string:))
-        notes = record[CloudSchema.Field.notes] as? String ?? ""
-        createdAt = record[CloudSchema.Field.createdAt] as? Date ?? createdAt
-
-        // Records from the server carry every field, so a missing image means it was removed.
-        let asset = record[CloudSchema.Field.image] as? CKAsset
-        imageData = asset?.fileURL.flatMap { try? Data(contentsOf: $0) }
+        let fields = ItemRecordFields(record)
+        title = fields.title ?? title
+        price = fields.price
+        currencyCode = fields.currencyCode ?? currencyCode
+        link = fields.link
+        notes = fields.notes
+        createdAt = fields.createdAt ?? createdAt
+        imageData = fields.imageData
         imageNeedsUpload = false
     }
 
     static func wishlistID(in record: CKRecord) -> String? {
-        (record[CloudSchema.Field.wishlist] as? CKRecord.Reference)?.recordID.recordName
+        ItemRecordFields(record).wishlistRecordName
+    }
+}
+
+/// The values of a WishItem record, read once for both the user's own items and the
+/// read-only copies of friends' items.
+nonisolated struct ItemRecordFields {
+    var title: String?
+    var price: Decimal?
+    var currencyCode: String?
+    var link: URL?
+    var notes: String
+    var createdAt: Date?
+    var imageData: Data?
+    var wishlistRecordName: String?
+
+    init(_ record: CKRecord) {
+        title = record[CloudSchema.Field.title] as? String
+        price = (record[CloudSchema.Field.price] as? String).flatMap {
+            Decimal(string: $0, locale: Locale(identifier: "en_US_POSIX"))
+        }
+        currencyCode = record[CloudSchema.Field.currencyCode] as? String
+        link = (record[CloudSchema.Field.link] as? String).flatMap(URL.init(string:))
+        notes = record[CloudSchema.Field.notes] as? String ?? ""
+        createdAt = record[CloudSchema.Field.createdAt] as? Date
+        // Records from the server carry every field, so a missing image means it was removed.
+        let asset = record[CloudSchema.Field.image] as? CKAsset
+        imageData = asset?.fileURL.flatMap { try? Data(contentsOf: $0) }
+        wishlistRecordName = (record[CloudSchema.Field.wishlist] as? CKRecord.Reference)?.recordID.recordName
+    }
+}
+
+// MARK: - Friends' records
+
+extension FriendWishlist {
+    func apply(_ record: CKRecord) {
+        name = record[CloudSchema.Field.name] as? String ?? name
+        createdAt = record[CloudSchema.Field.createdAt] as? Date ?? createdAt
+    }
+}
+
+extension FriendItem {
+    func apply(_ fields: ItemRecordFields) {
+        title = fields.title ?? title
+        price = fields.price
+        currencyCode = fields.currencyCode ?? currencyCode
+        link = fields.link
+        notes = fields.notes
+        createdAt = fields.createdAt ?? createdAt
+        imageData = fields.imageData
+    }
+}
+
+// MARK: - Share titles
+
+/// The share's title is what invitees see ("Edwin’s Wishlists"); friends' apps read the
+/// owner's name back out of it.
+nonisolated enum ShareTitle {
+    private static let suffix = "\u{2019}s Wishlists"
+
+    static func make(ownerName: String) -> String {
+        ownerName.trimmingCharacters(in: .whitespacesAndNewlines) + suffix
+    }
+
+    static func ownerName(from title: String) -> String? {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let name = trimmed.hasSuffix(suffix) ? String(trimmed.dropLast(suffix.count)) : trimmed
+        return name.isEmpty ? nil : name
+    }
+
+    /// Prefers the name the owner typed when sharing, then their iCloud name.
+    static func ownerDisplayName(for share: CKShare) -> String? {
+        if let title = share[CKShare.SystemFieldKey.title] as? String, let name = ownerName(from: title) {
+            return name
+        }
+        let formatted = share.owner.userIdentity.nameComponents?.formatted() ?? ""
+        return formatted.isEmpty ? nil : formatted
     }
 }

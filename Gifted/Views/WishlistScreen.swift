@@ -45,6 +45,7 @@ struct WishlistScreen: View {
 
     @State private var addingItem = false
     @State private var showingSettings = false
+    @State private var showingShareSheet = false
     @State private var listPrompt: ListPrompt?
     @State private var listNameDraft = ""
     @State private var confirmingDelete = false
@@ -83,6 +84,9 @@ struct WishlistScreen: View {
         }
         .sheet(isPresented: $showingSettings) {
             SettingsView()
+        }
+        .sheet(isPresented: $showingShareSheet) {
+            ShareWishlistsSheet()
         }
         .alert(listPrompt == .rename ? "Rename Wishlist" : "New Wishlist", isPresented: isPromptPresented) {
             TextField("Name", text: $listNameDraft)
@@ -132,8 +136,9 @@ struct WishlistScreen: View {
 
     @ToolbarContentBuilder
     private func toolbarContent() -> some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
+        ToolbarItemGroup(placement: .topBarLeading) {
             Button("Settings", systemImage: "gearshape") { showingSettings = true }
+            Button("Share Wishlists", systemImage: "person.badge.plus") { showingShareSheet = true }
         }
         ToolbarItemGroup(placement: .topBarTrailing) {
             Menu("Sort", systemImage: "arrow.up.arrow.down") {

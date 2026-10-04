@@ -114,6 +114,42 @@ final class SyncManager: SyncChangeRecorder {
         }
     }
 
+    // MARK: - Sharing with friends
+
+    /// The container the system sharing UI needs to manage this user's share.
+    var cloudContainer: CKContainer { container }
+
+    private var zoneWideShareID: CKRecord.ID {
+        CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: CloudSchema.zoneID)
+    }
+
+    /// The share that gives friends read-only access to all of this user's wishlists,
+    /// or nil if they haven't shared yet.
+    func fetchShare() async throws -> CKShare? {
+        do {
+            return try await container.privateCloudDatabase.record(for: zoneWideShareID) as? CKShare
+        } catch let error as CKError where error.code == .unknownItem || error.code == .zoneNotFound {
+            return nil
+        }
+    }
+
+    /// Creates the share if needed and updates the name friends will see.
+    func prepareShare(ownerName: String) async throws -> CKShare {
+        let database = container.privateCloudDatabase
+        // The zone must exist on the server before it can be shared, and everything
+        // made offline should be uploaded so friends see the whole list.
+        _ = try await database.modifyRecordZones(saving: [CKRecordZone(zoneID: CloudSchema.zoneID)], deleting: [])
+        try? await engine?.sendChanges()
+
+        let share = try await fetchShare() ?? CKShare(recordZoneID: CloudSchema.zoneID)
+        share[CKShare.SystemFieldKey.title] = ShareTitle.make(ownerName: ownerName)
+        let results = try await database.modifyRecords(saving: [share], deleting: [], savePolicy: .changedKeys)
+        guard let saved = try results.saveResults[share.recordID]?.get() as? CKShare else {
+            throw CKError(.internalError)
+        }
+        return saved
+    }
+
     // MARK: - SyncChangeRecorder
 
     func recordSaves(_ ids: [String]) {
