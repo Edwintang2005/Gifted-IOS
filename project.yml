@@ -1,0 +1,88 @@
+# Source of truth for Gifted.xcodeproj. After adding/removing files or changing
+# settings here, regenerate with: xcodegen generate
+name: Gifted
+options:
+  bundleIdPrefix: com.edwintang
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+  groupSortPosition: top
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: 3L8Q3U3WY3
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    MARKETING_VERSION: "2.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    ENABLE_PREVIEWS: YES
+
+targets:
+  Gifted:
+    type: application
+    platform: iOS
+    sources:
+      - Gifted
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwintang.gifted
+        CODE_SIGN_ENTITLEMENTS: Gifted/Gifted.entitlements
+        INFOPLIST_FILE: Gifted/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Gifted
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_NSCameraUsageDescription: Gifted uses the camera so you can snap a photo of something you'd like.
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    dependencies:
+      - target: GiftedShareExtension
+
+  GiftedShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - GiftedShareExtension
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwintang.gifted.share
+        CODE_SIGN_ENTITLEMENTS: GiftedShareExtension/GiftedShareExtension.entitlements
+        INFOPLIST_FILE: GiftedShareExtension/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Gifted
+        SKIP_INSTALL: YES
+
+  GiftedTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - GiftedTests
+    dependencies:
+      - target: Gifted
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwintang.gifted.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Gifted.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Gifted
+        BUNDLE_LOADER: $(TEST_HOST)
+
+schemes:
+  Gifted:
+    build:
+      targets:
+        Gifted: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - GiftedTests
