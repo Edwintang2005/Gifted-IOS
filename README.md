@@ -45,7 +45,10 @@ Development builds use CloudKit's **Development** environment, while TestFlight 
 1. ~~Remove Amplify; local wishlist with iCloud sync; share extension~~
 2. ~~Share wishlists with friends via invite links~~
 3. Gift circles: claim gifts or split them with other gifters, hidden from the recipient
-4. Notifications and polish
+4. Notifications, occasions and polish
+5. Release
+
+See [Roadmap.md](Roadmap.md) for the detailed plan, open questions and known issues.
 
 # Credits
 Credits given to:
