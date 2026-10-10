@@ -1,8 +1,8 @@
 # Gifted App
 
-A wishlist app for iOS and iPadOS, written in SwiftUI. Save things you'd love to receive by pasting a product link, sharing a page from Safari, or snapping a photo. Your wishlists sync across your devices with iCloud, and you can invite friends to see them.
+A wishlist app for iPhone, written in SwiftUI. Save things you'd love to receive by pasting a product link, sharing a page from Safari, or snapping a photo. Your wishlists sync across your devices with iCloud, and you can invite friends to see them.
 
-Supports: iOS and iPadOS 17.0+
+Supports: iPhone, iOS 17.0+
 
 # Significance
 

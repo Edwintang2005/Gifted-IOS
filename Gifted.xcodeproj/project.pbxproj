@@ -13,6 +13,7 @@
 		20CA392DBCD4553919178B20 /* GiftedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD476EE1FF4F9830B2028F3 /* GiftedApp.swift */; };
 		247CCA438C377324811CB5B7 /* ImageProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF4440E2E8388FD1594E2D8 /* ImageProcessing.swift */; };
 		27095EE61B9045DCD2DF066E /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AE838E998B1B3C043A75E8 /* ParsingTests.swift */; };
+		29270094E78A34E3974788E2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1461F9DC0D0588017C2604FD /* PrivacyInfo.xcprivacy */; };
 		298AB78B527EF3BA9EA7C033 /* ItemEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B446BE9230430CD58AD524F /* ItemEditorView.swift */; };
 		2C94AE46859AF4F267A83DB0 /* LinkDetailsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD96CE1DEB8527DA8F77951 /* LinkDetailsFetcher.swift */; };
 		2F2BDBE9973636D76951D69A /* Inbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D0F99D9235AE44AF04CA87 /* Inbox.swift */; };
@@ -89,6 +90,7 @@
 		07502A1B1CC47B621AF96A72 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0990F7F25AD5752C737575DB /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		141BAD08343EFE1598FC8B13 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		1461F9DC0D0588017C2604FD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1834B1C7B14F4F9BF77532AC /* WishlistScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistScreen.swift; sourceTree = "<group>"; };
 		18AE838E998B1B3C043A75E8 /* ParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsingTests.swift; sourceTree = "<group>"; };
 		2499A9BF260558D65702ACF5 /* FriendStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendStoreTests.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				07502A1B1CC47B621AF96A72 /* Assets.xcassets */,
 				ED9BCAE67D6C4651CF362335 /* Gifted.entitlements */,
 				B15D55370B0ACD2FEB4715E8 /* Info.plist */,
+				1461F9DC0D0588017C2604FD /* PrivacyInfo.xcprivacy */,
 			);
 			path = Gifted;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E42E38B85C60D9215DA73D4 /* Assets.xcassets in Resources */,
+				29270094E78A34E3974788E2 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,10 +461,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gifted/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Gifted;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Gifted uses the camera so you can snap a photo of something you'd like.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -468,7 +472,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.edwintang.gifted;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -484,7 +488,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.edwintang.gifted.tests;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Gifted.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Gifted";
 			};
 			name = Debug;
@@ -504,7 +508,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.edwintang.gifted.share;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -520,7 +524,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.edwintang.gifted.tests;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Gifted.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Gifted";
 			};
 			name = Release;
@@ -540,7 +544,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.edwintang.gifted.share;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -595,7 +599,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -605,7 +609,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -619,10 +623,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gifted/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Gifted;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Gifted uses the camera so you can snap a photo of something you'd like.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -630,7 +634,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.edwintang.gifted;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -691,7 +695,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -702,7 +706,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};

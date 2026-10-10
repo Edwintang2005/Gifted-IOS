@@ -108,14 +108,18 @@ Fixed record names do the conflict handling:
 **System integration**
 - A home screen widget for the next occasion or recently added gifts.
 - An App Intent / Shortcut: "Add to Gifted".
-- iPad layout pass, Dynamic Type, VoiceOver and dark-mode audit.
+- iPad support: the app is iPhone-only for 1.0. Adding iPad means a layout pass and 13" iPad screenshots.
+- Dynamic Type, VoiceOver and dark-mode audit.
 
 **Onboarding.** A first-run screen that explains the share extension and inviting friends.
 
 ## Phase 5: Release
 
 - [ ] Deploy the CloudKit schema to Production in the CloudKit Console (record types plus any indexes). TestFlight and App Store builds use Production, and two people can only share if both builds use the same environment.
-- [ ] App icon: check the 1024px `App Icon.jpg` meets App Store rules (no transparency) and maybe refresh it.
+- [x] App icon meets App Store rules (1024×1024, no transparency). Consider refreshing the design.
+- [x] Privacy manifest (`Gifted/PrivacyInfo.xcprivacy`) declaring UserDefaults use.
+- [x] `ITSAppUsesNonExemptEncryption = NO`, so there are no export compliance questions on upload.
+- [x] iPhone only, version 1.0.
 - [ ] Settings: add **Delete All My Data**, which deletes the iCloud zones, leaves all shares and wipes local data.
 - [ ] Privacy policy URL, and the App Privacy answers. Data lives in the user's own iCloud; the app has no server and no analytics.
 - [ ] Screenshots, App Store description, TestFlight beta with a few friend groups.
@@ -123,7 +127,6 @@ Fixed record names do the conflict handling:
 
 ## Known issues and tech debt
 
-- **Stale Settings text:** the iCloud footer still says "Sharing with friends is coming soon." (`Gifted/Views/SettingsView.swift`).
 - **No thumbnail in invites:** `UIImage(named: "AppIcon")` returns nil, so Messages shows no picture for invites. Add a dedicated image asset for it.
 - **Price sort with mixed currencies:** sorting compares raw numbers across currencies, and the list total is hidden when currencies differ.
 - **Coarse conflict policy:** the last device to save a record wins, and edits made at the same time on two devices aren't merged field by field.

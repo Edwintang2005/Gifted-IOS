@@ -91,7 +91,7 @@ struct SettingsView: View {
         case .temporarilyUnavailable:
             "Your Apple Account needs attention. Open the Settings app and sign in again; your wishlists will sync once that's done."
         default:
-            "Your wishlists are stored in your private iCloud account. Sharing with friends is coming soon."
+            "Your wishlists are stored in your private iCloud account. Only friends you invite can see them."
         }
     }
 }
